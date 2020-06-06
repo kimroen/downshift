@@ -292,10 +292,10 @@ export interface UseSelectProps<Item> {
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
   ) => UseSelectState<Item>
-  onSelectedItemChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
+  onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
 }
 
@@ -303,6 +303,11 @@ export interface UseSelectStateChangeOptions<Item> {
   type: UseSelectStateChangeTypes
   changes: UseSelectState<Item>
   props: UseSelectProps<Item>
+}
+
+export interface UseSelectStateChange<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
 }
 
 export interface UseSelectGetMenuPropsOptions
@@ -398,7 +403,7 @@ export enum UseComboboxStateChangeTypes {
   FunctionSelectItem = '__function_select_item__',
   FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
-  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__'
+  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
 export interface UseComboboxProps<Item> {
@@ -430,11 +435,11 @@ export interface UseComboboxProps<Item> {
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
   ) => UseComboboxState<Item>
-  onSelectedItemChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
+  onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
+  onStateChange?: (changes: UseComboboxStateChange<Item>) => void
+  onInputValueChange?: (changes: UseComboboxStateChange<Item>) => void
   environment?: Environment
 }
 
@@ -442,6 +447,11 @@ export interface UseComboboxStateChangeOptions<Item> {
   type: UseComboboxStateChangeTypes
   changes: UseComboboxState<Item>
   props: UseComboboxProps<Item>
+}
+
+export interface UseComboboxStateChange<Item>
+  extends Partial<UseComboboxState<Item>> {
+  type: UseComboboxStateChangeTypes
 }
 
 export interface UseComboboxGetMenuPropsOptions
@@ -588,7 +598,8 @@ export interface A11yRemovalMessage<Item> {
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
   index?: number
   selectedItem: Item
 }
