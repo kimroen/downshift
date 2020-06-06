@@ -2,6 +2,11 @@ import * as React from 'react'
 
 type Callback = () => void
 
+type MakeAllButSelectedKeysOptional<T, K extends keyof T> = Partial<
+  Omit<T, K>
+> &
+  Pick<T, K>
+
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
@@ -292,9 +297,13 @@ export interface UseSelectProps<Item> {
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
   ) => UseSelectState<Item>
-  onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
-  onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
-  onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
+  onSelectedItemChange?: (
+    changes: UseSelectStateChangeForKey<Item, 'selectedItem'>,
+  ) => void
+  onIsOpenChange?: (changes: UseSelectStateChangeForKey<Item, 'isOpen'>) => void
+  onHighlightedIndexChange?: (
+    changes: UseSelectStateChangeForKey<Item, 'highlightedIndex'>,
+  ) => void
   onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
 }
@@ -307,6 +316,13 @@ export interface UseSelectStateChangeOptions<Item> {
 
 export interface UseSelectStateChange<Item>
   extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
+}
+
+type UseSelectStateChangeForKey<
+  Item,
+  Key extends keyof UseSelectState<Item>
+> = MakeAllButSelectedKeysOptional<UseSelectState<Item>, Key> & {
   type: UseSelectStateChangeTypes
 }
 
@@ -435,11 +451,19 @@ export interface UseComboboxProps<Item> {
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
   ) => UseComboboxState<Item>
-  onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
-  onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
-  onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
+  onSelectedItemChange?: (
+    changes: UseComboboxStateChangeForKey<Item, 'selectedItem'>,
+  ) => void
+  onIsOpenChange?: (
+    changes: UseComboboxStateChangeForKey<Item, 'isOpen'>,
+  ) => void
+  onHighlightedIndexChange?: (
+    changes: UseComboboxStateChangeForKey<Item, 'highlightedIndex'>,
+  ) => void
   onStateChange?: (changes: UseComboboxStateChange<Item>) => void
-  onInputValueChange?: (changes: UseComboboxStateChange<Item>) => void
+  onInputValueChange?: (
+    changes: UseComboboxStateChangeForKey<Item, 'inputValue'>,
+  ) => void
   environment?: Environment
 }
 
@@ -451,6 +475,13 @@ export interface UseComboboxStateChangeOptions<Item> {
 
 export interface UseComboboxStateChange<Item>
   extends Partial<UseComboboxState<Item>> {
+  type: UseComboboxStateChangeTypes
+}
+
+type UseComboboxStateChangeForKey<
+  Item,
+  Key extends keyof UseComboboxState<Item>
+> = MakeAllButSelectedKeysOptional<UseComboboxState<Item>, Key> & {
   type: UseComboboxStateChangeTypes
 }
 
@@ -564,9 +595,11 @@ export interface UseMultipleSelectionProps<Item> {
   activeIndex?: number
   initialActiveIndex?: number
   defaultActiveIndex?: number
-  onActiveIndexChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
+  onActiveIndexChange?: (
+    changes: UseMultipleSelectionStateChangeForKey<Item, 'activeIndex'>,
+  ) => void
   onSelectedItemsChange?: (
-    changes: UseMultipleSelectionStateChange<Item>,
+    changes: UseMultipleSelectionStateChangeForKey<Item, 'selectedItems'>,
   ) => void
   onStateChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
   keyNavigationNext?: string
@@ -586,6 +619,13 @@ export interface UseMultipleSelectionDispatchAction {
 
 export interface UseMultipleSelectionStateChange<Item>
   extends Partial<UseMultipleSelectionState<Item>> {
+  type: UseMultipleSelectionStateChangeTypes
+}
+
+type UseMultipleSelectionStateChangeForKey<
+  Item,
+  Key extends keyof UseMultipleSelectionState<Item>
+> = MakeAllButSelectedKeysOptional<UseMultipleSelectionState<Item>, Key> & {
   type: UseMultipleSelectionStateChangeTypes
 }
 
